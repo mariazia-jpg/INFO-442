@@ -1,11 +1,11 @@
 # INFO-442
 Rodas G - PM
 
-Jonathan Herdianshah - Product Design
+Jonathan H - Product Design
 
-Abel - Developer 
+Abel Z - Developer 
 
-Kenneth Pangestu - Developer
+Kenneth P - Developer
 
-Maria Zia - Developer 
+Maria Z - Developer 
 
