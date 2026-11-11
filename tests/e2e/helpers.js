@@ -25,7 +25,10 @@ export function setup() {
     const page = await context.newPage();
     page.errors = [];
     page.on('pageerror', (error) => page.errors.push(error));
-    page.go = (path) => page.goto(ctx.server.url + path);
+    page.go = async (path) => {
+      await page.goto(ctx.server.url + path);
+      await waitForRender(page);
+    };
     return page;
   };
   return ctx;
@@ -39,8 +42,30 @@ export function uniqueEmail() {
 
 export const heading = (page) => page.locator('main h1');
 
+/**
+ * React Router updates the address bar first and draws the new page a moment
+ * later (navigation runs in a React transition). Layout puts the route it has
+ * drawn on <main data-path>, so wait until that matches the address bar before
+ * reading anything off the page.
+ */
+export async function waitForRender(page) {
+  await page.waitForFunction(
+    () => document.querySelector('main')?.dataset.path === window.location.pathname,
+    null,
+    { timeout: 5000 },
+  );
+}
+
+/** Waits for the URL path to be exactly `path` and for that page to be drawn. */
 export async function expectPath(page, path) {
   await page.waitForURL((url) => url.pathname === path, { timeout: 5000 });
+  await waitForRender(page);
+}
+
+/** Like expectPath, for a URL pattern (for example /\/ideas\/.+/). */
+export async function expectUrl(page, pattern) {
+  await page.waitForURL(pattern, { timeout: 5000 });
+  await waitForRender(page);
 }
 
 export async function textOf(locator) {

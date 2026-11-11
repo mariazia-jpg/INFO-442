@@ -1,7 +1,7 @@
 // Style Questions (Q1–Q21) and Profile Complete (PC1–PC5).
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { answerQuestions, expectPath, heading, reachPreferences, setup, signUp, textOf } from './helpers.js';
+import { answerQuestions, expectPath, expectUrl, heading, reachPreferences, setup, signUp, textOf } from './helpers.js';
 
 const ctx = setup();
 
@@ -124,11 +124,11 @@ describe('Style questions', () => {
     const page = await ctx.newPage();
     await reachPreferences(page); // Beginner · Scissors
     await page.getByRole('button', { name: 'Edit' }).click();
-    await page.waitForURL(/\/questions\/4\?edit=1$/);
+    await expectUrl(page, /\/questions\/4\?edit=1$/);
     assert.equal(await checked(page, 'Beginner'), true, 'saved level is selected (P6)');
     await page.getByLabel('Advanced', { exact: true }).check();
     await next(page).click();
-    await page.waitForURL(/\/questions\/5\?edit=1$/);
+    await expectUrl(page, /\/questions\/5\?edit=1$/);
     await page.getByLabel('Sewing Machine', { exact: true }).check();
     await next(page).click();
     await expectPath(page, '/preferences');
@@ -136,7 +136,7 @@ describe('Style questions', () => {
 
     // Skip on Question 5 in edit mode also returns to Preferences.
     await page.getByRole('button', { name: 'Edit' }).click();
-    await page.waitForURL(/\/questions\/4\?edit=1$/);
+    await expectUrl(page, /\/questions\/4\?edit=1$/);
     await skip(page).click();
     await skip(page).click();
     await expectPath(page, '/preferences');
