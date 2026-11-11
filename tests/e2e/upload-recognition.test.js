@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { brokenPhoto, oversizedPhoto, pdfFile, photo, textFile } from './fixtures.js';
 import {
-  choosePhoto, expectPath, heading, reachPreferences, setup, signUp, signUpAndOnboard, textOf, uploadAndIdentify,
+  choosePhoto, expectPath, expectUrl, heading, reachPreferences, setup, signUp, signUpAndOnboard, textOf, uploadAndIdentify,
 } from './helpers.js';
 
 const ctx = setup();
@@ -29,7 +29,7 @@ describe('Progress tracker', () => {
     await expectPath(page, '/ideas');
     assert.equal(await textOf(currentStep(page)), 'Ideas');
     await page.locator('.project-card a').first().click();
-    await page.waitForURL(/\/ideas\/.+/);
+    await expectUrl(page, /\/ideas\/.+/);
     assert.equal(await textOf(currentStep(page)), 'Ideas');
   });
 

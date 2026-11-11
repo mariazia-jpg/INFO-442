@@ -2,7 +2,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  assertNoPageErrors, expectPath, heading, setup, signUpAndOnboard, textOf, uploadAndIdentify,
+  assertNoPageErrors, expectPath, expectUrl, heading, setup, signUpAndOnboard, textOf, uploadAndIdentify,
 } from './helpers.js';
 
 const ctx = setup();
@@ -29,7 +29,7 @@ describe('core workflow', () => {
     assert.ok((await cards.count()) > 0, 'expected at least one project card');
 
     await cards.first().getByRole('link', { name: /View Project/ }).click();
-    await page.waitForURL(/\/ideas\/[\w-]+$/);
+    await expectUrl(page, /\/ideas\/[\w-]+$/);
     const tutorial = page.getByRole('link', { name: /Open Tutorial/ });
     assert.equal(await tutorial.getAttribute('target'), '_blank');
     assert.match(await tutorial.getAttribute('href'), /^https:\/\//);

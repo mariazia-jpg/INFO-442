@@ -2,7 +2,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { expectPath, heading, reachPreferences, setup, textOf } from './helpers.js';
+import { expectPath, expectUrl, heading, reachPreferences, setup, textOf } from './helpers.js';
 
 const ctx = setup();
 const PROJECTS = JSON.parse(readFileSync(new URL('../../public/data/projects.json', import.meta.url))).projects;
@@ -64,7 +64,7 @@ describe('Preferences page', () => {
     assert.equal(await continueButton(page).isDisabled(), true);
     // Edit is the way out (P6).
     await page.getByRole('button', { name: 'Edit' }).click();
-    await page.waitForURL(/\/questions\/4\?edit=1$/);
+    await expectUrl(page, /\/questions\/4\?edit=1$/);
   });
 
   it('keeps its selections after a refresh', async () => {
@@ -133,7 +133,7 @@ describe('Recommendations page', () => {
     await toIdeas(page, { name: 'tshirt' });
     const title = await cards(page).first().locator('h2').innerText();
     await cards(page).first().getByRole('link', { name: /View Project/ }).click();
-    await page.waitForURL(/\/ideas\/.+/);
+    await expectUrl(page, /\/ideas\/.+/);
     assert.equal(await textOf(heading(page)), title);
   });
 
@@ -166,7 +166,7 @@ describe('Recommendations page', () => {
     await page.reload();
     assert.deepEqual(await cardTitles(page), before);
     await cards(page).first().getByRole('link').click();
-    await page.waitForURL(/\/ideas\/.+/);
+    await expectUrl(page, /\/ideas\/.+/);
     await page.goBack();
     await expectPath(page, '/ideas');
     assert.deepEqual(await cardTitles(page), before);
@@ -195,7 +195,7 @@ describe('Tutorial Details page', () => {
     const page = await ctx.newPage();
     await toIdeas(page, { name: 'tshirt' });
     await cards(page).first().getByRole('link', { name: /View Project/ }).click();
-    await page.waitForURL(/\/ideas\/(.+)$/);
+    await expectUrl(page, /\/ideas\/(.+)$/);
     const id = new URL(page.url()).pathname.split('/').pop();
     const project = PROJECTS.find((p) => p.id === id);
     assert.ok(await page.locator('.hero-image').evaluate((el) => el.complete && el.naturalWidth > 0));
@@ -214,7 +214,7 @@ describe('Tutorial Details page', () => {
     await toIdeas(page, { name: 'tshirt', answers: { 4: ['Advanced'], 5: ['Scissors', 'Needle and Thread', 'Sewing Machine'] } });
     const before = await cardTitles(page);
     await cards(page).nth(1).getByRole('link').click();
-    await page.waitForURL(/\/ideas\/.+/);
+    await expectUrl(page, /\/ideas\/.+/);
     await page.getByRole('button', { name: 'Back to Ideas' }).click();
     await expectPath(page, '/ideas');
     assert.deepEqual(await cardTitles(page), before);

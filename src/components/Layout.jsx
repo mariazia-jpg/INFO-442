@@ -29,7 +29,8 @@ export default function Layout() {
     <>
       <a className="skip-link" href="#main">Skip to content</a>
       <NavBar />
-      <main id="main" className="page" tabIndex={-1}>
+      {/* data-path names the route currently drawn, so tests can wait for a page change to finish. */}
+      <main id="main" className="page" tabIndex={-1} data-path={pathname}>
         <Outlet />
       </main>
     </>

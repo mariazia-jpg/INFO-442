@@ -4,7 +4,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { photo } from './fixtures.js';
-import { choosePhoto, expectPath, reachPreferences, setup, signUp, signUpAndOnboard } from './helpers.js';
+import { choosePhoto, expectPath, expectUrl, reachPreferences, setup, signUp, signUpAndOnboard } from './helpers.js';
 
 const ctx = setup();
 
@@ -43,7 +43,7 @@ async function visitAllPages(page, check) {
   await page.locator('.project-card').first().waitFor();
   await check(page, 'recommendations');
   await page.locator('.project-card a').first().click();
-  await page.waitForURL(/\/ideas\/.+/);
+  await expectUrl(page, /\/ideas\/.+/);
   await page.locator('.hero-image').waitFor();
   await check(page, 'tutorial details');
 }
@@ -127,8 +127,9 @@ describe('Keyboard access (NF-A2)', () => {
   it('focus moves to the new page heading after navigation', async () => {
     const page = await ctx.newPage();
     await reachPreferences(page);
-    const focusedTag = await page.evaluate(() => document.activeElement?.tagName);
-    assert.equal(focusedTag, 'H1');
+    // Focus moves in an effect that runs just after the new page is drawn.
+    await page.waitForFunction(() => document.activeElement?.tagName === 'H1', null, { timeout: 3000 });
+    assert.equal(await page.evaluate(() => document.activeElement.textContent), 'Confirm your preferences');
   });
 });
 
