@@ -1,0 +1,19 @@
+# Runs the unit and end-to-end tests on every push and pull request.
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e

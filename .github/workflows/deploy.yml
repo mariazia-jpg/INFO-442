@@ -1,0 +1,50 @@
+# Builds the app and publishes it to GitHub Pages on every push to main.
+# One-time setup (repo owner): Settings → Pages → Build and deployment →
+# Source: "GitHub Actions". The site is then served over HTTPS at
+# https://<owner>.github.io/<repo-name>/
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm test
+      - name: Build for /<repo-name>/
+        run: npm run build
+        env:
+          VITE_BASE: /${{ github.event.repository.name }}/
+      # GitHub Pages serves 404.html for unknown paths; a copy of the app lets
+      # deep links like /ideas or /login load and show the right page.
+      - run: cp dist/index.html dist/404.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
