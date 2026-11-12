@@ -19,6 +19,7 @@
   "dependencies": {
     "@tensorflow-models/mobilenet": "^2.1.1",
     "@tensorflow/tfjs": "^4.22.0",
+    "firebase": "^13.3.0",
     "heic2any": "^0.0.4",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
