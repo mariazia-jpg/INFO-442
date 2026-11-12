@@ -93,14 +93,18 @@ Supabase, replace the bodies of `signUp`, `logIn`, `logOut` and `getCurrentUser`
 return values and error codes. No page reads storage directly.
 
 **Clothing recognition (`src/services/recognition.js`).** The default recognizer is
-MobileNet, a general image classifier, running in the browser with TensorFlow.js. The
-photo never leaves the device, which matters for users aged 13–17. Its labels are
-mapped to T-shirt / Top / Pants / Skirt in `src/lib/clothingLabels.js`. If no label
-fits, or the model doesn't load within 8 seconds, the user picks the type manually.
-MobileNet isn't trained on clothing specifically, so expect it to miss sometimes. A
-custom 4-class model (for example Teachable Machine) can be swapped in behind the
-same `identifyClothing()` function. The model files download only after a photo is
-chosen.
+Gemini (`gemini-3.5-flash-lite`) called through Firebase AI Logic (`src/services/gemini.js`),
+so no API key is ever in the site's code. Gemini must answer with one of
+`tshirt | top | pants | skirt | unknown` (structured output). Requests carry a Firebase
+App Check token (reCAPTCHA) so other sites can't use the project's quota. The Firebase
+web config and reCAPTCHA site key are in `src/services/firebaseConfig.js`; both are
+public identifiers. Every recognizer sits behind `recognizeClothing(imageBase64) →
+{ category }`. If recognition fails, times out after 8 seconds, returns something
+malformed, or answers `unknown`, the user picks the type manually. MobileNet (in-browser,
+labels mapped in `src/lib/clothingLabels.js`) is still available with
+`VITE_RECOGNIZER=mobilenet`, and `VITE_RECOGNIZER=stub` with `VITE_STUB_RESULT`
+returns a fixed answer or an error for testing screens without Firebase (see
+`.env.example`). The Firebase SDK downloads only after a photo is chosen.
 
 **HEIC photos.** Safari shows HEIC natively. Chrome and Edge can't, so the app
 converts HEIC to JPEG in the browser with `heic2any`, loaded only when needed.
