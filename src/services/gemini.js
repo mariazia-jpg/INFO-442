@@ -3,11 +3,12 @@
 // which a static GitHub Pages site has no other safe way to do.
 
 import { RECOGNITION_CATEGORIES, parseRecognitionReply } from '../lib/recognitionResult.js';
-import { FIREBASE_CONFIG } from './firebaseConfig.js';
+import { FIREBASE_CONFIG, RECAPTCHA_SITE_KEY } from './firebaseConfig.js';
 
-// Stable Flash model that runs on the no-cost plan. Check
-// https://firebase.google.com/docs/ai-logic/models before it is retired.
-const GEMINI_MODEL = 'gemini-3.8-flash';
+// Flash-Lite answers a five-way classification in about a second, well inside
+// the 8 s budget; gemini-3.8-flash did not respond in time when tested.
+// Check https://firebase.google.com/docs/ai-logic/models before it is retired.
+const GEMINI_MODEL = 'gemini-3.5-flash-lite';
 
 const PROMPT = [
   'This photo shows a single clothing item, usually laid flat.',
@@ -37,11 +38,21 @@ function loadModel() {
 }
 
 async function createModel() {
-  const [{ initializeApp }, { getAI, getGenerativeModel, GoogleAIBackend, Schema }] = await Promise.all([
+  const [
+    { initializeApp },
+    { initializeAppCheck, ReCaptchaV3Provider },
+    { getAI, getGenerativeModel, GoogleAIBackend, Schema },
+  ] = await Promise.all([
     import('firebase/app'),
+    import('firebase/app-check'),
     import('firebase/ai'),
   ]);
   const app = initializeApp(FIREBASE_CONFIG);
+  // App Check must start before AI Logic so every Gemini request carries a token.
+  initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider(RECAPTCHA_SITE_KEY),
+    isTokenAutoRefreshEnabled: true,
+  });
   const ai = getAI(app, { backend: new GoogleAIBackend() });
   return getGenerativeModel(ai, {
     model: GEMINI_MODEL,
