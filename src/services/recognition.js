@@ -70,8 +70,13 @@ function stubReply(result) {
   return parseRecognitionReply(JSON.stringify({ category: result }));
 }
 
+// File names can also simulate each kind of failure, so the e2e tests can
+// check Issue 4 without a real API.
 function fileNameReply(fileName) {
-  return { category: categoryFromClothingType(clothingTypeFromFileName(fileName)) };
+  const name = String(fileName || '').toLowerCase();
+  if (name.includes('api-error')) throw new Error('Simulated API error');
+  if (name.includes('malformed')) return parseRecognitionReply('{"category":"jacket"}');
+  return { category: categoryFromClothingType(clothingTypeFromFileName(name)) };
 }
 
 /**
