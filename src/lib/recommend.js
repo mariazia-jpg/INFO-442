@@ -13,10 +13,10 @@ const rank = (level) => EXPERIENCE_LEVELS.indexOf(level);
  * Results are ordered from easiest to hardest, then by title, so the same
  * inputs always give the same list (T9).
  */
-export function recommendProjects(projects, { clothingType, experienceLevel, tools }) {
+export function recommendProjects(projects, { clothingType, experienceLevel, toolIds }) {
   const userRank = rank(experienceLevel);
   if (!clothingType || userRank < 0) return [];
-  const owned = new Set(tools || []);
+  const owned = new Set(toolIds || []);
 
   return projects
     .filter((project) => project.clothingType === clothingType)
@@ -24,7 +24,7 @@ export function recommendProjects(projects, { clothingType, experienceLevel, too
       const projectRank = rank(project.difficulty);
       return projectRank >= 0 && projectRank <= userRank;
     })
-    .filter((project) => (project.requiredTools || []).every((tool) => owned.has(tool)))
+    .filter((project) => Array.isArray(project.requiredToolIds) && project.requiredToolIds.every((id) => owned.has(id)))
     .sort((a, b) => rank(a.difficulty) - rank(b.difficulty) || a.title.localeCompare(b.title));
 }
 

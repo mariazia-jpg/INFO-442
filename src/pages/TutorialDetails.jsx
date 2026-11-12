@@ -74,6 +74,12 @@ export default function TutorialDetails() {
       </ul>
       <p className="lead">{project.transformation}</p>
       <p className="tools"><span className="muted">Tools:</span> {project.requiredTools.join(', ')}</p>
+      <section aria-labelledby="materials-heading">
+        <h2 id="materials-heading">Materials</h2>
+        <ul>
+          {project.materials.map((material) => <li key={material}>{material}</li>)}
+        </ul>
+      </section>
       {available && project.tutorialSource && <p className="muted small">Tutorial by {project.tutorialSource}</p>}
 
       <ActionBar>

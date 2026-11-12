@@ -2,6 +2,8 @@
 // Projects live in public/data/projects.json so the list can be edited without
 // touching code, and so a failed load can be shown to the user (R18).
 
+import { projectsWithTools } from '../lib/projectData.js';
+
 let cached = null;
 
 /** Prefixes a path inside /public with the site's base URL (needed on GitHub Pages). */
@@ -14,8 +16,7 @@ export async function loadProjects() {
   const response = await fetch(assetUrl('data/projects.json'));
   if (!response.ok) throw new Error(`Projects request failed (${response.status})`);
   const data = await response.json();
-  if (!Array.isArray(data?.projects)) throw new Error('Project data is malformed');
-  cached = data.projects;
+  cached = projectsWithTools(data);
   return cached;
 }
 

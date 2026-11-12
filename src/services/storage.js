@@ -6,6 +6,7 @@ export const KEYS = {
   accounts: 'rewear:accounts',
   session: 'rewear:session',
   preferences: (userId) => `rewear:preferences:${userId}`,
+  userTools: (userId) => `rewear:user-tools:${userId}`,
   upload: 'rewear:upload',
 };
 

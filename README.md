@@ -63,6 +63,7 @@ src/
   components/             Layout, NavBar, route guards, shared UI (ActionBar, ProgressTracker, Alert)
   pages/                  One file per page in the design spec
   services/               Accounts, preferences, current upload, image processing, recognition, project data
+  data/tools.js           Shared tool IDs and display names
   lib/                    Pure logic with no browser APIs (filtering, validation, label mapping)
 tests/
   unit/                   node:test unit tests
@@ -105,15 +106,27 @@ chosen.
 **HEIC photos.** Safari shows HEIC natively. Chrome and Edge can't, so the app
 converts HEIC to JPEG in the browser with `heic2any`, loaded only when needed.
 
-**Project data (`public/data/projects.json`).** Each project has the fields from the
-data model (`clothingType`, `projectType`, `category`, `difficulty`,
-`requiredTools`, `estimatedTime`, `tutorialUrl`, `tutorialAvailable`, ...). Every
-tutorial link was checked in November 2026. Set `tutorialAvailable` to `false` if a
-link dies, and the details page shows the unavailable banner. `npm test` checks every
-record has valid values.
+**Project data (`public/data/projects.json`).** Project records contain the display
+information, clothing type, difficulty, tutorial URL, and availability flag.
+`projectTools` holds separate `{ projectId, toolId }` rows referencing the shared
+Tools catalogue in `src/data/tools.js`. `projectsWithTools()` joins these records
+for the cards and filters. This follows the data-model feedback without adding a
+new backend. The User account records have no upload or project ID fields.
+
+**User tools.** Tool selections are stored separately from preferences as
+`{ userId, toolId }` rows under `rewear:user-tools:<userId>`. The preference service
+returns names for the existing screens and IDs for filtering. Older saved tool
+names still load; saving preferences converts them into the separate rows.
+
+**Tutorial availability.** Set `tutorialAvailable` to `false` if a link stops
+working; the details page shows a banner and disables Open Tutorial. On November
+11, 2026, the Jeans-to-Denim Skirt and Tiered Skirt to Off-Shoulder Top links
+returned 404 and were marked unavailable. All other listed destinations returned
+200 with matching tutorial titles. URL syntax checks in `npm test` do not replace
+checking the external sites manually.
 
 **Filtering rules (`src/lib/recommend.js`).** R4 uses the confirmed clothing type
-only. R5 shows difficulty at or below the user's level. R6 requires every tool the
+only. R5 shows difficulty at or below the user's level. R6 compares shared tool IDs and requires every tool the
 project needs to be one the user selected. Results are ordered easiest first.
 
 ## Deployment

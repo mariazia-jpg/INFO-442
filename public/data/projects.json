@@ -1,9 +1,10 @@
 {
-  "version": 1,
-  "notes": "Each project links to a free, publicly available tutorial (checked November 2026). Estimated times come from the tutorial when it gives one, otherwise they are our estimate. Set tutorialAvailable to false if a link stops working. Images are original illustrations in public/images/projects.",
+  "version": 2,
+  "notes": "Tutorial destinations checked November 11, 2026. Links returning 404 are marked unavailable so the details page can explain the problem. Estimated times come from the tutorial when it gives one, otherwise they are our estimate. Images are original illustrations in public/images/projects. Tool requirements are linked by ID in projectTools; the shared catalogue is in src/data/tools.js.",
   "projects": [
     {
       "id": "no-sew-tee-tote",
+      "materials": ["Old T-shirt", "Colored tape for marking"],
       "title": "No-Sew T-Shirt Tote",
       "description": "Cut and knot an old tee into a washable shopping bag.",
       "transformation": "Cut off the sleeves and widen the neckline to make the handles, then cut a fringe along the bottom hem and tie the strips together to close the bag. The stretchy cotton makes a light grocery or gym tote.",
@@ -12,7 +13,6 @@
       "projectType": "No-Sew Project",
       "category": "Bags",
       "difficulty": "Beginner",
-      "requiredTools": ["Scissors"],
       "estimatedTime": "20 min",
       "tutorialUrl": "https://www.instructables.com/No-Sew-T-Shirt-Tote-Bag-1",
       "tutorialSource": "Instructables",
@@ -20,6 +20,7 @@
     },
     {
       "id": "cropped-tie-front-tee",
+      "materials": ["Oversized T-shirt"],
       "title": "Cropped Tie-Front Tee",
       "description": "Refresh an oversized tee with a cropped hem and a tie-front detail.",
       "transformation": "Mark a new hem a few inches below the chest, cut two tabs at the front, and knot them together for a fitted, tie-front crop top. No sewing needed.",
@@ -28,7 +29,6 @@
       "projectType": "No-Sew Project",
       "category": "Tops",
       "difficulty": "Beginner",
-      "requiredTools": ["Scissors"],
       "estimatedTime": "30 min",
       "tutorialUrl": "https://cutoutandkeep.net/projects/no-sew-t-shirt-upcycle-diy-front-tie-crop-top",
       "tutorialSource": "Cut Out + Keep",
@@ -36,6 +36,7 @@
     },
     {
       "id": "hand-sewn-tee-scrunchie",
+      "materials": ["Fabric from an old T-shirt", "Elastic", "Sewing thread"],
       "title": "Hand-Sewn Tee Scrunchie",
       "description": "Turn a strip of soft T-shirt jersey into a hair scrunchie.",
       "transformation": "Cut a long strip from the body of the tee, sew it into a tube by hand, thread elastic through, and stitch the ends closed. One shirt makes several scrunchies.",
@@ -44,7 +45,6 @@
       "projectType": "Hand-Sewn Project",
       "category": "Accessories",
       "difficulty": "Beginner",
-      "requiredTools": ["Scissors", "Needle and Thread"],
       "estimatedTime": "30 min",
       "tutorialUrl": "https://www.instructables.com/How-to-Hand-Sew-a-Scrunchie",
       "tutorialSource": "Instructables",
@@ -52,6 +52,7 @@
     },
     {
       "id": "tee-waistband-skirt",
+      "materials": ["T-shirt", "Waistband and zipper from old pants or a skirt", "Sewing thread"],
       "title": "T-Shirt Waistband Skirt",
       "description": "Join a too-small tee to an old waistband for a new skirt.",
       "transformation": "Use the waistband and zip from old slacks or a skirt as the top, then cut the T-shirt body into the skirt panel and machine-stitch the two together. A zigzag stitch keeps the knit fabric from stretching out.",
@@ -60,7 +61,6 @@
       "projectType": "Machine-Sewn Project",
       "category": "Shorts/Skirts",
       "difficulty": "Advanced",
-      "requiredTools": ["Scissors", "Sewing Machine"],
       "estimatedTime": "3 hr",
       "tutorialUrl": "https://www.cutoutandkeep.net/projects/diy-t-shirt-skirt",
       "tutorialSource": "Cut Out + Keep",
@@ -68,15 +68,15 @@
     },
     {
       "id": "cold-shoulder-crop",
+      "materials": ["Button-up shirt", "Fusible hemming tape"],
       "title": "Cold-Shoulder Button-Up Crop",
       "description": "Cut a button-up shirt into a cold-shoulder crop top.",
-      "transformation": "Crop the shirt to your length and cut shoulder openings so the sleeves stay attached at the top. The woven fabric holds its shape, so the cut edges don't need hemming.",
+      "transformation": "Crop a button-up shirt and cut shoulder openings to create a cold-shoulder top. Follow the linked tutorial for the cutting pattern and finishing options.",
       "image": "images/projects/top-cold-shoulder.svg",
       "clothingType": "Top",
       "projectType": "No-Sew Project",
       "category": "Tops",
       "difficulty": "Beginner",
-      "requiredTools": ["Scissors"],
       "estimatedTime": "30 min",
       "tutorialUrl": "https://www.instructables.com/DIY-Cold-Shoulder-Button-Up-Crop-Top-No-Sewing-Req/",
       "tutorialSource": "Instructables",
@@ -84,6 +84,7 @@
     },
     {
       "id": "shirt-scrap-scrunchie",
+      "materials": ["Fabric from an old shirt", "Elastic", "Sewing thread"],
       "title": "Shirt-Scrap Scrunchie",
       "description": "Make a scrunchie from a top you no longer wear.",
       "transformation": "Cut a rectangle from the back panel of the top, sew it into a tube by hand, feed elastic through, and close the seam. Prints and stripes make the best scrunchies.",
@@ -92,7 +93,6 @@
       "projectType": "Hand-Sewn Project",
       "category": "Accessories",
       "difficulty": "Beginner",
-      "requiredTools": ["Scissors", "Needle and Thread"],
       "estimatedTime": "25 min",
       "tutorialUrl": "https://www.redtedart.com/how-to-make-a-scrunchie/",
       "tutorialSource": "Red Ted Art",
@@ -100,6 +100,7 @@
     },
     {
       "id": "cropped-high-low-button-down",
+      "materials": ["Long-sleeved button-down shirt", "Sewing thread"],
       "title": "Cropped High-Low Button-Down",
       "description": "Turn a long-sleeve button-down into a sleeveless cropped top.",
       "transformation": "Remove the sleeves, finish the armholes with bias tape made from the leftover fabric, and cut a high-low hem that's shorter in front. A sewing machine gives the cleanest bias binding.",
@@ -108,7 +109,6 @@
       "projectType": "Machine-Sewn Project",
       "category": "Tops",
       "difficulty": "Intermediate",
-      "requiredTools": ["Scissors", "Sewing Machine"],
       "estimatedTime": "2 hr",
       "tutorialUrl": "https://cutoutandkeep.net/projects/cropped-button-down-refashion",
       "tutorialSource": "Cut Out + Keep",
@@ -116,6 +116,7 @@
     },
     {
       "id": "classic-cut-offs",
+      "materials": ["Old jeans"],
       "title": "Classic Cut-Off Shorts",
       "description": "Measure, cut, and fray old jeans into summer shorts.",
       "transformation": "Mark your length on one leg, cut, fold the jeans in half to copy the line onto the other leg, then wash or brush the hem to fray it. No sewing at all.",
@@ -124,7 +125,6 @@
       "projectType": "No-Sew Project",
       "category": "Shorts/Skirts",
       "difficulty": "Beginner",
-      "requiredTools": ["Scissors"],
       "estimatedTime": "30 min",
       "tutorialUrl": "https://www.levi.com/CA/en_CA/blog/article/how-to-turn-jeans-into-cut-offs",
       "tutorialSource": "Levi's",
@@ -132,6 +132,7 @@
     },
     {
       "id": "denim-leg-pouch",
+      "materials": ["Old jeans", "Scrap fabric for lining", "Zipper or button", "Sewing thread"],
       "title": "Denim Leg Pouch",
       "description": "Sew a small zip pouch from the leg of old jeans.",
       "transformation": "Cut two panels from the thigh of the jeans, line them with scrap fabric, and stitch in a zipper or button closure. Good for pencils, makeup, or chargers.",
@@ -140,7 +141,6 @@
       "projectType": "Machine-Sewn Project",
       "category": "Accessories",
       "difficulty": "Intermediate",
-      "requiredTools": ["Scissors", "Needle and Thread", "Sewing Machine"],
       "estimatedTime": "1.5 hr",
       "tutorialUrl": "https://sewguide.com/make-denim-pouch-from-old-jeans/",
       "tutorialSource": "Sew Guide",
@@ -148,6 +148,7 @@
     },
     {
       "id": "four-pocket-jeans-tote",
+      "materials": ["Sturdy non-stretch jeans", "Sewing thread"],
       "title": "Four-Pocket Jeans Tote",
       "description": "Keep the back pockets and sew old jeans into a sturdy tote.",
       "transformation": "Cut the jeans open below the waistband so all four pockets stay on the outside of the bag, sew the bottom closed, and add straps cut from the legs.",
@@ -156,7 +157,6 @@
       "projectType": "Machine-Sewn Project",
       "category": "Bags",
       "difficulty": "Intermediate",
-      "requiredTools": ["Scissors", "Sewing Machine"],
       "estimatedTime": "2 hr",
       "tutorialUrl": "https://heatherhandmade.com/upcycle-jeans-tote-bag",
       "tutorialSource": "Heather Handmade",
@@ -164,6 +164,7 @@
     },
     {
       "id": "jeans-to-denim-skirt",
+      "materials": ["Old jeans", "Sewing thread"],
       "title": "Jeans-to-Denim Skirt",
       "description": "Unpick the inseams and turn straight-leg jeans into a skirt.",
       "transformation": "Open the inside leg seams, overlap the front and back crotch pieces so they lie flat, stitch them in place, and cut a frayed hem at your chosen length.",
@@ -172,14 +173,14 @@
       "projectType": "Machine-Sewn Project",
       "category": "Shorts/Skirts",
       "difficulty": "Advanced",
-      "requiredTools": ["Scissors", "Sewing Machine"],
       "estimatedTime": "3 hr",
       "tutorialUrl": "https://www.gathered.how/sewing-quilting/sewing/how-to-turn-a-pair-of-jeans-into-a-denim-skirt/",
       "tutorialSource": "Gathered",
-      "tutorialAvailable": true
+      "tutorialAvailable": false
     },
     {
       "id": "shorter-skirt-new-hem",
+      "materials": ["Long skirt", "Sewing thread"],
       "title": "Shorter Skirt, New Hem",
       "description": "Take a long skirt up to a new length with a hand-sewn hem.",
       "transformation": "Unpick the old hem, fold the skirt up to the length you want, press it, and hand-stitch a new hem. The original fabric stays intact, so you can change it back later.",
@@ -188,7 +189,6 @@
       "projectType": "Hand-Sewn Project",
       "category": "Shorts/Skirts",
       "difficulty": "Beginner",
-      "requiredTools": ["Scissors", "Needle and Thread"],
       "estimatedTime": "45 min",
       "tutorialUrl": "https://www.thecreativefolk.com/make-skirt-shorter-without-cutting",
       "tutorialSource": "The Creative Folk",
@@ -196,6 +196,7 @@
     },
     {
       "id": "skirt-fabric-scrunchie",
+      "materials": ["Fabric from an old skirt", "Elastic", "Sewing thread"],
       "title": "Skirt-Fabric Scrunchie",
       "description": "Use the extra length from a skirt to sew a matching scrunchie.",
       "transformation": "Cut a strip from the skirt's hem or lining, sew it into a tube, add elastic, and stitch it closed by hand.",
@@ -204,7 +205,6 @@
       "projectType": "Hand-Sewn Project",
       "category": "Accessories",
       "difficulty": "Beginner",
-      "requiredTools": ["Scissors", "Needle and Thread"],
       "estimatedTime": "25 min",
       "tutorialUrl": "https://www.redtedart.com/how-to-make-a-scrunchie/",
       "tutorialSource": "Red Ted Art",
@@ -212,6 +212,7 @@
     },
     {
       "id": "tiered-skirt-off-shoulder-top",
+      "materials": ["Tiered skirt", "Elastic", "Sewing thread"],
       "title": "Tiered Skirt to Off-Shoulder Top",
       "description": "Refashion a tiered skirt into an off-the-shoulder ruffle top.",
       "transformation": "The bottom tier becomes the ruffle and the upper tiers become the bodice. Trace a tank top for the shape, then sew an elastic casing along the neckline so it sits off the shoulders.",
@@ -220,11 +221,112 @@
       "projectType": "Machine-Sewn Project",
       "category": "Tops",
       "difficulty": "Advanced",
-      "requiredTools": ["Scissors", "Sewing Machine"],
       "estimatedTime": "1 hr",
       "tutorialUrl": "https://www.instructables.com/How-to-Upcycle-a-Skirt-Into-an-Cold-Shoulder-Shirt/",
       "tutorialSource": "Instructables",
-      "tutorialAvailable": true
+      "tutorialAvailable": false
+    }
+  ],
+  "projectTools": [
+    {
+      "projectId": "no-sew-tee-tote",
+      "toolId": "scissors"
+    },
+    {
+      "projectId": "cropped-tie-front-tee",
+      "toolId": "scissors"
+    },
+    {
+      "projectId": "hand-sewn-tee-scrunchie",
+      "toolId": "scissors"
+    },
+    {
+      "projectId": "hand-sewn-tee-scrunchie",
+      "toolId": "needle-thread"
+    },
+    {
+      "projectId": "tee-waistband-skirt",
+      "toolId": "scissors"
+    },
+    {
+      "projectId": "tee-waistband-skirt",
+      "toolId": "sewing-machine"
+    },
+    {
+      "projectId": "cold-shoulder-crop",
+      "toolId": "scissors"
+    },
+    {
+      "projectId": "shirt-scrap-scrunchie",
+      "toolId": "scissors"
+    },
+    {
+      "projectId": "shirt-scrap-scrunchie",
+      "toolId": "needle-thread"
+    },
+    {
+      "projectId": "cropped-high-low-button-down",
+      "toolId": "scissors"
+    },
+    {
+      "projectId": "cropped-high-low-button-down",
+      "toolId": "sewing-machine"
+    },
+    {
+      "projectId": "classic-cut-offs",
+      "toolId": "scissors"
+    },
+    {
+      "projectId": "denim-leg-pouch",
+      "toolId": "scissors"
+    },
+    {
+      "projectId": "denim-leg-pouch",
+      "toolId": "needle-thread"
+    },
+    {
+      "projectId": "denim-leg-pouch",
+      "toolId": "sewing-machine"
+    },
+    {
+      "projectId": "four-pocket-jeans-tote",
+      "toolId": "scissors"
+    },
+    {
+      "projectId": "four-pocket-jeans-tote",
+      "toolId": "sewing-machine"
+    },
+    {
+      "projectId": "jeans-to-denim-skirt",
+      "toolId": "scissors"
+    },
+    {
+      "projectId": "jeans-to-denim-skirt",
+      "toolId": "sewing-machine"
+    },
+    {
+      "projectId": "shorter-skirt-new-hem",
+      "toolId": "scissors"
+    },
+    {
+      "projectId": "shorter-skirt-new-hem",
+      "toolId": "needle-thread"
+    },
+    {
+      "projectId": "skirt-fabric-scrunchie",
+      "toolId": "scissors"
+    },
+    {
+      "projectId": "skirt-fabric-scrunchie",
+      "toolId": "needle-thread"
+    },
+    {
+      "projectId": "tiered-skirt-off-shoulder-top",
+      "toolId": "scissors"
+    },
+    {
+      "projectId": "tiered-skirt-off-shoulder-top",
+      "toolId": "sewing-machine"
     }
   ]
 }

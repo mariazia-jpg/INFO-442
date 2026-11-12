@@ -2,10 +2,11 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { projectsWithTools } from '../../src/lib/projectData.js';
 import { expectPath, expectUrl, heading, reachPreferences, setup, textOf } from './helpers.js';
 
 const ctx = setup();
-const PROJECTS = JSON.parse(readFileSync(new URL('../../public/data/projects.json', import.meta.url))).projects;
+const PROJECTS = projectsWithTools(JSON.parse(readFileSync(new URL('../../public/data/projects.json', import.meta.url))));
 const RANK = { Beginner: 0, Intermediate: 1, Advanced: 2 };
 
 const continueButton = (page) => page.getByRole('button', { name: 'Continue' });
@@ -191,7 +192,7 @@ describe('Recommendations page', () => {
 });
 
 describe('Tutorial Details page', () => {
-  it('T1–T7 shows image, project type, title, difficulty, time, description; Open Tutorial opens a new tab', async () => {
+  it('T1–T7 / #19 shows project information and materials; Open Tutorial opens a new tab', async () => {
     const page = await ctx.newPage();
     await toIdeas(page, { name: 'tshirt' });
     await cards(page).first().getByRole('link', { name: /View Project/ }).click();
@@ -202,11 +203,22 @@ describe('Tutorial Details page', () => {
     assert.equal((await page.locator('main .eyebrow').innerText()).toLowerCase(), project.projectType.toLowerCase());
     assert.equal(await textOf(heading(page)), project.title);
     assert.deepEqual(await page.locator('main .tags li').allInnerTexts(), [project.difficulty, project.estimatedTime]);
+    assert.deepEqual(await page.getByRole('region', { name: 'Materials' }).getByRole('listitem').allInnerTexts(), project.materials);
     assert.match(await textOf(page.locator('main .lead')), new RegExp(project.transformation.slice(0, 20).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
     const link = page.getByRole('link', { name: /Open Tutorial/ });
     assert.equal(await link.getAttribute('href'), project.tutorialUrl);
     assert.equal(await link.getAttribute('target'), '_blank');
     assert.match(await link.getAttribute('rel'), /noopener/);
+    // Verify the new-tab interaction without depending on the external site's uptime.
+    await page.context().route(project.tutorialUrl, (route) => route.fulfill({
+      contentType: 'text/html', body: '<h1>External tutorial</h1>',
+    }));
+    const popupPromise = page.waitForEvent('popup');
+    await link.click();
+    const popup = await popupPromise;
+    await popup.waitForLoadState();
+    assert.equal(popup.url(), project.tutorialUrl);
+    await popup.close();
   });
 
   it('T8 / T9 Back to Ideas shows the same projects as before', async () => {
@@ -234,6 +246,7 @@ describe('Tutorial Details page', () => {
     assert.match(await textOf(page.getByRole('status')), /Tutorial unavailable/);
     assert.equal(await page.getByRole('button', { name: /Open Tutorial/ }).isDisabled(), true);
     assert.equal(await page.getByRole('link', { name: /Open Tutorial/ }).count(), 0);
+    assert.deepEqual(await page.getByRole('region', { name: 'Materials' }).getByRole('listitem').allInnerTexts(), PROJECTS.find((p) => p.id === 'no-sew-tee-tote').materials);
     assert.ok(await page.getByRole('button', { name: 'Back to Ideas' }).isVisible());
   });
 
