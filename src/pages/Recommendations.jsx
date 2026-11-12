@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
+import ProjectCard from '../components/ProjectCard.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import { ActionBar, Alert, ProgressTracker, Spinner, StatusIcon, usePageTitle } from '../components/ui.jsx';
 import { hasSearchablePreferences, recommendProjects, summarizePreferences } from '../lib/recommend.js';
 import { yourItem } from '../lib/wording.js';
 import { loadPreferences } from '../services/preferences.js';
-import { assetUrl, loadProjects } from '../services/projects.js';
+import { loadProjects } from '../services/projects.js';
 import { getUpload } from '../services/upload.js';
 
 /** Recommendations (R1–R18). */
@@ -73,21 +74,7 @@ export default function Recommendations() {
       {state.status === 'ready' && matches.length > 0 && (
         <ul className="project-list">
           {matches.map((project) => (
-            <li key={project.id} className="card project-card">
-              <img src={assetUrl(project.image)} alt={`Illustration of the ${project.title} project`} width="400" height="300" loading="lazy" />
-              <div className="project-card-body">
-                <h2>{project.title}</h2>
-                <p>{project.description}</p>
-                <ul className="tags" aria-label="Difficulty and time">
-                  <li>{project.difficulty}</li>
-                  <li>{project.estimatedTime}</li>
-                </ul>
-                <p className="tools"><span className="muted">Tools:</span> {project.requiredTools.join(', ')}</p>
-                <Link to={`/ideas/${project.id}`} className="btn btn-secondary">
-                  View Project<span className="visually-hidden">: {project.title}</span>
-                </Link>
-              </div>
-            </li>
+            <ProjectCard key={project.id} project={project} />
           ))}
         </ul>
       )}
