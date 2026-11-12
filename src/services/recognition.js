@@ -10,13 +10,13 @@
 //               out the success and failure screens without Firebase.
 //   filename  — reads the type from the file name; used by the e2e tests.
 //
-// Every recognizer sits behind recognizeClothing() → { category }. When it
-// fails or answers "unknown", identifyClothing() returns null and the user
-// picks the type manually.
+// Every recognizer sits behind recognizeClothing() → { category }. Failures
+// (errors, timeouts, malformed replies, "unknown") become null in
+// identifyClothing(), and the user picks the type manually (C8–C10).
 
 import { clothingTypeFromFileName, clothingTypeFromPredictions } from '../lib/clothingLabels.js';
 import {
-  base64FromDataUrl, categoryFromClothingType, clothingTypeFromCategory, parseRecognitionReply,
+  base64FromDataUrl, categoryFromClothingType, parseRecognitionReply, resolveClothingType,
 } from '../lib/recognitionResult.js';
 import { askGemini, isGeminiConfigured, preloadGemini } from './gemini.js';
 
@@ -48,13 +48,6 @@ function loadModel() {
 export function preloadRecognizer() {
   if (MODE === 'mobilenet') loadModel().catch(() => {});
   if (MODE === 'gemini') preloadGemini();
-}
-
-function withTimeout(promise, ms) {
-  return Promise.race([
-    promise,
-    new Promise((_, reject) => setTimeout(() => reject(new Error('Recognition timed out')), ms)),
-  ]);
 }
 
 async function classify(photo) {
@@ -105,11 +98,7 @@ export async function recognizeClothing(imageBase64, { fileName } = {}) {
  * @returns {Promise<'T-shirt'|'Top'|'Pants'|'Skirt'|null>} null on any failure; never rejects
  */
 export async function identifyClothing({ photo, fileName }, { timeoutMs = DEFAULT_TIMEOUT_MS } = {}) {
-  try {
-    const result = await withTimeout(recognizeClothing(base64FromDataUrl(photo), { fileName }), timeoutMs);
-    return clothingTypeFromCategory(result.category);
-  } catch (error) {
-    console.warn('Clothing recognition unavailable:', error);
-    return null;
-  }
+  return resolveClothingType(() => {
+    return recognizeClothing(base64FromDataUrl(photo), { fileName });
+  }, timeoutMs);
 }
