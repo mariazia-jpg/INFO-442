@@ -1,3 +1,5 @@
+import { TOOL_CATALOG } from '../data/tools.js';
+
 // Fixed option lists from the Requirements and the data model
 // (Style, Color, Project Type, Tool, Experience Level, Clothing Type).
 
@@ -5,7 +7,7 @@ export const CLOTHING_TYPES = ['T-shirt', 'Top', 'Pants', 'Skirt'];
 
 export const EXPERIENCE_LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
 
-export const TOOLS = ['Scissors', 'Needle and Thread', 'Sewing Machine'];
+export const TOOLS = TOOL_CATALOG.map((tool) => tool.name);
 
 export const STYLES = [
   { name: 'Streetwear', image: 'images/styles/streetwear.svg' },
