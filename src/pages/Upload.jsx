@@ -10,6 +10,7 @@ import { saveUpload } from '../services/upload.js';
 const ACCEPT = 'image/jpeg,image/png,image/heic,image/heif,.jpg,.jpeg,.png,.heic';
 
 const FILE_ERRORS = {
+  missing: 'Choose a photo of your clothing item first.',
   unsupported: `That file type isn’t supported. Choose a ${SUPPORTED_FILE_LABEL} photo.`,
   'too-large': `That photo is larger than ${MAX_UPLOAD_BYTES / (1024 * 1024)} MB. Choose a smaller photo.`,
 };
@@ -53,7 +54,7 @@ export default function Upload() {
 
     const problem = validatePhoto(chosen);
     if (problem) {
-      // U13, U14, U15: show the error and clear the selection so Continue is disabled.
+      // U13, U14, U15: show the error and clear the selection.
       setFile(null);
       setPreviewUrl(null);
       setFileError(problem);
@@ -87,7 +88,12 @@ export default function Upload() {
   }
 
   async function processAndIdentify() {
-    if (!file) return;
+    // Continue stays enabled so pressing it with no photo can say why it
+    // can't go on (#16). A file-type or size error already explains, so keep it.
+    if (!file) {
+      if (!fileError) setFileError('missing');
+      return;
+    }
     setPhase('processing');
     const started = Date.now();
     try {
@@ -196,7 +202,7 @@ export default function Upload() {
       )}
 
       <ActionBar>
-        <button type="button" className="btn btn-primary" disabled={!hasPhoto} onClick={processAndIdentify}>
+        <button type="button" className="btn btn-primary" onClick={processAndIdentify}>
           Continue
         </button>
       </ActionBar>

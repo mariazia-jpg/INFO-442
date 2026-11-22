@@ -14,6 +14,15 @@ const preview = (page) => page.getByRole('img', { name: 'Preview of your clothin
 const currentStep = (page) => page.locator('.progress li[aria-current="step"]');
 const previewSrc = (page) => preview(page).getAttribute('src');
 
+/** #16: with no photo selected, Continue shows `message` and stays on the empty Upload page. */
+async function expectContinueBlocked(page, message) {
+  await continueButton(page).click();
+  assert.match(await textOf(alert(page)), message);
+  assert.equal(await page.getByRole('heading', { name: 'Identifying your item…' }).count(), 0);
+  assert.equal(new URL(page.url()).pathname, '/upload');
+  assert.equal(await textOf(heading(page)), 'Add your clothing item');
+}
+
 describe('Progress tracker', () => {
   it('PT1–PT5 lists the four steps and marks the current one', async () => {
     const page = await ctx.newPage();
@@ -41,11 +50,21 @@ describe('Progress tracker', () => {
 });
 
 describe('Clothing Upload page', () => {
-  it('U1 / U2 shows an upload area listing JPG, PNG, HEIC with Continue disabled', async () => {
+  it('U1 / U2 shows an upload area listing JPG, PNG, HEIC, with no error until Continue is pressed', async () => {
     const page = await ctx.newPage();
     await signUpAndOnboard(page);
     assert.match(await textOf(page.locator('.dropzone')), /JPG, PNG, HEIC/);
-    assert.equal(await continueButton(page).isDisabled(), true);
+    assert.equal(await continueButton(page).isEnabled(), true);
+    assert.equal(await alert(page).count(), 0);
+  });
+
+  it('#16 Continue with no photo shows an error and stays on Upload; choosing a photo clears it', async () => {
+    const page = await ctx.newPage();
+    await signUpAndOnboard(page);
+    await expectContinueBlocked(page, /choose a photo of your clothing item first/i);
+    await choosePhoto(page, photo('tshirt'));
+    await preview(page).waitFor();
+    assert.equal(await alert(page).count(), 0);
   });
 
   it('U3 / U4 the upload area opens the device picker for photos (camera or library on phones)', async () => {
@@ -92,23 +111,23 @@ describe('Clothing Upload page', () => {
     assert.notEqual(await previewSrc(page), before);
   });
 
-  it('U11 / U12 Remove clears the preview and disables Continue', async () => {
+  it('U11 / U12 Remove clears the preview, and Continue then asks for a photo', async () => {
     const page = await ctx.newPage();
     await signUpAndOnboard(page);
     await choosePhoto(page, photo('tshirt'));
     await page.getByRole('button', { name: 'Remove' }).click();
     assert.equal(await preview(page).count(), 0);
     assert.ok(await page.locator('.dropzone').isVisible());
-    assert.equal(await continueButton(page).isDisabled(), true);
+    await expectContinueBlocked(page, /choose a photo of your clothing item first/i);
   });
 
-  it('U13 / U15 an unsupported file shows an error and keeps Continue disabled', async () => {
+  it('U13 / U15 an unsupported file shows an error, and Continue does not go on', async () => {
     const page = await ctx.newPage();
     await signUpAndOnboard(page);
     for (const file of [textFile(), pdfFile(), { ...photo('pants'), name: 'pants.gif', mimeType: 'image/gif' }]) {
       await choosePhoto(page, file);
       assert.match(await textOf(alert(page)), /isn.t supported/i, file.name);
-      assert.equal(await continueButton(page).isDisabled(), true);
+      await expectContinueBlocked(page, /isn.t supported/i);
     }
     // Choosing a good photo clears the error.
     await choosePhoto(page, photo('pants'));
@@ -120,7 +139,7 @@ describe('Clothing Upload page', () => {
     await signUpAndOnboard(page);
     await choosePhoto(page, oversizedPhoto());
     assert.match(await textOf(alert(page)), /larger than 10 MB/i);
-    assert.equal(await continueButton(page).isDisabled(), true);
+    await expectContinueBlocked(page, /larger than 10 MB/i);
   });
 
   it('U16 closing the picker without a file leaves the page unchanged', async () => {
@@ -163,7 +182,8 @@ describe('Clothing Upload page', () => {
     await continueButton(page).click();
     await page.getByRole('button', { name: 'Choose Another' }).click();
     assert.equal(await textOf(heading(page)), 'Add your clothing item');
-    assert.equal(await continueButton(page).isDisabled(), true);
+    assert.equal(await preview(page).count(), 0);
+    assert.ok(await page.locator('.dropzone').isVisible());
   });
 });
 
