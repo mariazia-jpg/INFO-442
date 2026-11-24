@@ -1,13 +1,17 @@
-/* ReWear — mobile-first styles following the grayscale wireframes.
-   Contrast: every text color below is at least 4.5:1 on its background (NF-A1).
+/* ReWear — mobile-first styles: deep forest green on a soft cream background.
+   Contrast: every text color below is at least 4.5:1 on its background (NF-A1);
+   borders that show where a control is are at least 3:1 (WCAG 1.4.11).
    Every control is at least 24 × 24 CSS px (NF-A10); most are 44–48 px. */
 
 :root {
-  --ink: #111111;
-  --text: #1f1f1f;
-  --muted: #555555;          /* 7.4:1 on white */
-  --line: #d4d4d4;
-  --surface: #f4f4f2;
+  --ink: #2c4f36;            /* deep forest green: 8.2:1 on --bg, 9.2:1 on white */
+  --text: #1e2b22;           /* 13.1:1 on --bg */
+  --muted: #535b50;          /* 6.3:1 on --bg, 5.7:1 on --surface */
+  --line: #d6ccb8;           /* dividers only */
+  --control-line: #8a8270;   /* control borders: 3.4:1 on --bg, 3.8:1 on white */
+  --surface: #ede6d6;
+  --bg: #f7f1e6;             /* soft cream page background */
+  --moss: #5c7f5a;           /* decoration only, never text */
   --white: #ffffff;
   --focus: #1d4ed8;
   --error-bg: #fdecec;
@@ -23,7 +27,7 @@
   color-scheme: light;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   color: var(--text);
-  background: var(--white);
+  background: var(--bg);
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
 }
@@ -37,7 +41,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--white);
+  background: var(--bg);
   overflow-x: hidden;
 }
 
@@ -173,7 +177,7 @@ a {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: var(--white);
+  background: var(--bg);
   border-bottom: 1px solid var(--line);
 }
 
@@ -187,6 +191,9 @@ a {
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 1.25rem;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -215,7 +222,7 @@ a {
   left: 0;
   right: 0;
   border-top: 1px solid var(--line);
-  background: var(--white);
+  background: var(--bg);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
 }
 
@@ -285,7 +292,7 @@ a {
   right: 0;
   bottom: 0;
   z-index: 10;
-  background: var(--white);
+  background: var(--bg);
   border-top: 1px solid var(--line);
   padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom));
 }
@@ -413,7 +420,7 @@ a {
   width: 100%;
   min-height: 48px;
   padding: 10px 14px;
-  border: 1.5px solid #8a8a8a;
+  border: 1.5px solid var(--control-line);
   border-radius: 8px;
   font: inherit;
   color: var(--text);
@@ -421,7 +428,7 @@ a {
 }
 
 .field input::placeholder {
-  color: #6b6b6b;
+  color: #6b6557;
 }
 
 .field input[aria-invalid='true'] {
@@ -550,7 +557,7 @@ a {
   gap: 8px;
   padding: 12px;
   min-height: 48px;
-  border: 1.5px solid var(--line);
+  border: 1.5px solid var(--control-line);
   border-radius: var(--radius);
   background: var(--white);
   cursor: pointer;
@@ -713,9 +720,9 @@ a {
   min-height: 220px;
   padding: 32px 16px;
   margin: 8px 0 16px;
-  border: 2px dashed #8a8a8a;
+  border: 2px dashed var(--control-line);
   border-radius: var(--radius);
-  background: #fafafa;
+  background: #fbf8f1;
   text-align: center;
   cursor: pointer;
 }
@@ -922,7 +929,7 @@ a {
 
 .tags li {
   padding: 2px 10px;
-  border: 1px solid #8a8a8a;
+  border: 1px solid var(--control-line);
   border-radius: 999px;
   font-size: 0.8rem;
   font-weight: 600;
