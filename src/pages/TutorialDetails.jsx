@@ -8,6 +8,7 @@ export default function TutorialDetails() {
   const { projectId } = useParams();
   const navigate = useNavigate();
   const [state, setState] = useState({ status: 'loading' });
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -18,7 +19,7 @@ export default function TutorialDetails() {
     return () => {
       active = false;
     };
-  }, [projectId]);
+  }, [projectId, retryCount]);
 
   const project = state.project;
   usePageTitle(project ? project.title : state.status === 'not-found' ? 'Project not found' : 'Project');
@@ -50,7 +51,14 @@ export default function TutorialDetails() {
             : 'Check your connection and try again.'}
         </Alert>
         <p><Link to="/" className="text-link">Go to the Home page</Link></p>
-        <ActionBar>{backToIdeas}</ActionBar>
+        <ActionBar>
+          {!notFound && (
+            <button type="button" className="btn btn-primary" onClick={() => setRetryCount((count) => count + 1)}>
+              Try again
+            </button>
+          )}
+          {backToIdeas}
+        </ActionBar>
       </>
     );
   }
@@ -73,6 +81,7 @@ export default function TutorialDetails() {
         <li>{project.estimatedTime}</li>
       </ul>
       <p className="lead">{project.transformation}</p>
+      <p>{project.description}</p>
       <p className="tools"><span className="muted">Tools:</span> {project.requiredTools.join(', ')}</p>
       <section aria-labelledby="materials-heading">
         <h2 id="materials-heading">Materials</h2>
