@@ -168,3 +168,27 @@ Still to check by hand on the deployed site, with the tools the requirements nam
 - **Performance:** NF-P1 (PageSpeed Insights), NF-P2 (WebPageTest), NF-P3 (recognition under 10 s), NF-P4, NF-P5 (Lighthouse).
 - **Accessibility:** NF-A1 (WebAIM contrast), NF-A3 (VoiceOver and NVDA), NF-A5 (alerts announced), NF-A8 (W3C validator), NF-A9 (Lighthouse).
 - **Browsers:** NF-A7, the full flow in Chrome, Safari (including iOS) and Edge.
+
+## Quality
+
+- **Accessibility:** Project images have descriptive alternative text. Each View Project
+  link includes the project title in its accessible name. Forms use labels and native
+  radio/checkbox controls; keyboard users have visible focus outlines and a Skip to
+  content link. Error alerts use `role="alert"`, and informational messages use
+  `role="status"`. Tutorial links announce that they open a new tab.
+- **Security:** External tutorial links use `target="_blank"` with
+  `rel="noopener noreferrer"`. React renders project text without injecting HTML.
+  The local MVP account service stores salted password hashes rather than plaintext
+  passwords. These browser-local accounts are a prototype, not server-enforced
+  authentication or a substitute for a production authentication service.
+- **Responsivity:** Layouts start with a single mobile column, fluid images, and
+  wrapping difficulty/time tags. At the 768px breakpoint, gutters, headings,
+  and tutorial image margins adapt for larger screens.
+  Recommendation cards and tutorial details were checked at 360, 768, and 1440px
+  without horizontal overflow. These viewport checks do not replace real-device tests.
+- **Recovery:** Empty recommendations offer Change Preferences, failed project-data
+  requests can be retried, and missing projects offer navigation back. Known unavailable
+  tutorials show an explanatory message and a disabled tutorial button.
+
+See [recommendation and tutorial verification](docs/sprint2-recommendation-review.md)
+for the scope, results, and remaining verification steps.

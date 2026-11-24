@@ -202,6 +202,7 @@ describe('Tutorial Details page', () => {
     assert.ok(await page.locator('.hero-image').evaluate((el) => el.complete && el.naturalWidth > 0));
     assert.equal((await page.locator('main .eyebrow').innerText()).toLowerCase(), project.projectType.toLowerCase());
     assert.equal(await textOf(heading(page)), project.title);
+    assert.ok(await page.getByText(project.description, { exact: true }).isVisible());
     assert.deepEqual(await page.locator('main .tags li').allInnerTexts(), [project.difficulty, project.estimatedTime]);
     assert.deepEqual(await page.getByRole('region', { name: 'Materials' }).getByRole('listitem').allInnerTexts(), project.materials);
     assert.match(await textOf(page.locator('main .lead')), new RegExp(project.transformation.slice(0, 20).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
@@ -248,6 +249,47 @@ describe('Tutorial Details page', () => {
     assert.equal(await page.getByRole('link', { name: /Open Tutorial/ }).count(), 0);
     assert.deepEqual(await page.getByRole('region', { name: 'Materials' }).getByRole('listitem').allInnerTexts(), PROJECTS.find((p) => p.id === 'no-sew-tee-tote').materials);
     assert.ok(await page.getByRole('button', { name: 'Back to Ideas' }).isVisible());
+  });
+
+  it('#19 failed project loading can be retried without losing the selected project', async () => {
+    const page = await ctx.newPage();
+    await reachPreferences(page);
+    await page.route('**/data/projects.json', (route) => route.abort());
+    await page.go('/ideas/no-sew-tee-tote');
+    await page.getByRole('heading', { name: 'We couldn’t load this project' }).waitFor();
+    await page.unroute('**/data/projects.json');
+    await page.getByRole('button', { name: 'Try again' }).click();
+    await page.getByRole('heading', { name: 'No-Sew T-Shirt Tote' }).waitFor();
+    assert.ok(await page.getByRole('link', { name: /Open Tutorial/ }).isVisible());
+  });
+
+  it('#18 every displayed card opens its own details and returns to unchanged results', async () => {
+    const page = await ctx.newPage();
+    await toIdeas(page, { name: 'tshirt', answers: { 4: ['Advanced'], 5: ['Scissors', 'Needle and Thread', 'Sewing Machine'] } });
+    const titles = await cardTitles(page);
+    for (let i = 0; i < titles.length; i++) {
+      await cards(page).nth(i).getByRole('link', { name: /View Project/ }).click();
+      await page.getByRole('heading', { name: titles[i], exact: true }).waitFor();
+      await page.getByRole('button', { name: 'Back to Ideas' }).click();
+      assert.deepEqual(await cardTitles(page), titles);
+    }
+  });
+
+  it('#20 changing preferences after empty results restores matching cards', async () => {
+    const page = await ctx.newPage();
+    await toIdeas(page, { name: 'skirt', answers: { 4: ['Advanced'], 5: ['Sewing Machine'] } });
+    await page.getByRole('button', { name: 'Change Preferences' }).click();
+    await expectPath(page, '/preferences');
+    await page.getByRole('button', { name: 'Edit' }).click();
+    await page.getByRole('button', { name: 'Next' }).click();
+    await page.getByLabel('Scissors', { exact: true }).check();
+    await page.getByRole('button', { name: 'Next' }).click();
+    await expectPath(page, '/preferences');
+    await continueButton(page).click();
+    const titles = await cardTitles(page);
+    assert.ok(titles.length > 0);
+    assert.deepEqual([...titles].sort(), expectedTitles('Skirt', 'Advanced', ['Scissors', 'Sewing Machine']).sort());
+    assert.equal(await page.locator('.empty-state').count(), 0);
   });
 
   it('T12 a project that does not exist shows a not-found message', async () => {
