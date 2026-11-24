@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import Logo from './Logo.jsx';
 
 function MenuIcon({ open }) {
   return (
@@ -42,7 +43,7 @@ export default function NavBar() {
   return (
     <header className="navbar">
       <div className="navbar-inner">
-        <Link to="/" className="brand">ReWear</Link>
+        <Link to="/" className="brand"><Logo /> ReWear</Link>
         <button
           type="button"
           className="menu-button"
