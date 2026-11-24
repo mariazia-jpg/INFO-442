@@ -8,6 +8,7 @@ export const KEYS = {
   preferences: (userId) => `rewear:preferences:${userId}`,
   userTools: (userId) => `rewear:user-tools:${userId}`,
   upload: 'rewear:upload',
+  materials: (userId, projectId) => `rewear:materials:${userId}:${projectId}`,
 };
 
 function area(kind) {

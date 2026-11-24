@@ -932,6 +932,43 @@ a {
   font-size: 0.95rem;
 }
 
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+}
+
+.checklist li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  border-bottom: 1px solid var(--line);
+}
+
+.checklist input {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  accent-color: var(--ink);
+}
+
+.checklist label {
+  flex: 1;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.checklist input:checked + label {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
+.checklist-count {
+  font-weight: 600;
+  margin: 4px 0 16px;
+}
+
 .empty-state h2 {
   font-size: 1.4rem;
 }
