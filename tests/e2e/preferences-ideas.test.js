@@ -222,6 +222,34 @@ describe('Tutorial Details page', () => {
     await popup.close();
   });
 
+  it('T-materials the materials list is a checklist that is remembered after leaving the page', async () => {
+    const page = await ctx.newPage();
+    await toIdeas(page, { name: 'tshirt' });
+    const titles = await cardTitles(page);
+    const project = PROJECTS.find((p) => titles.includes(p.title) && p.materials.length > 1);
+    await cards(page).filter({ hasText: project.title }).getByRole('link', { name: /View Project/ }).click();
+    const id = project.id;
+    await expectUrl(page, new RegExp(`/ideas/${id}$`));
+    const { materials } = project;
+    const region = page.getByRole('region', { name: 'Materials' });
+    const boxes = region.getByRole('checkbox');
+    const count = region.locator('.checklist-count');
+
+    assert.equal(await boxes.count(), materials.length);
+    assert.equal(await textOf(count), `0 of ${materials.length} ready`);
+    await region.getByRole('checkbox', { name: materials[0] }).check();
+    assert.equal(await textOf(count), `1 of ${materials.length} ready`);
+
+    await page.reload();
+    await expectUrl(page, new RegExp(`/ideas/${id}$`));
+    assert.ok(await region.getByRole('checkbox', { name: materials[0] }).isChecked());
+
+    for (const material of materials) await region.getByRole('checkbox', { name: material }).check();
+    assert.equal(await textOf(count), 'You have everything you need.');
+    await region.getByRole('checkbox', { name: materials[0] }).uncheck();
+    assert.equal(await textOf(count), `${materials.length - 1} of ${materials.length} ready`);
+  });
+
   it('T8 / T9 Back to Ideas shows the same projects as before', async () => {
     const page = await ctx.newPage();
     await toIdeas(page, { name: 'tshirt', answers: { 4: ['Advanced'], 5: ['Scissors', 'Needle and Thread', 'Sewing Machine'] } });

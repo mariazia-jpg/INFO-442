@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import MaterialsChecklist from '../components/MaterialsChecklist.jsx';
 import { ActionBar, Alert, ProgressTracker, Spinner, usePageTitle } from '../components/ui.jsx';
 import { assetUrl, findProject } from '../services/projects.js';
 
@@ -83,12 +84,7 @@ export default function TutorialDetails() {
       <p className="lead">{project.transformation}</p>
       <p>{project.description}</p>
       <p className="tools"><span className="muted">Tools:</span> {project.requiredTools.join(', ')}</p>
-      <section aria-labelledby="materials-heading">
-        <h2 id="materials-heading">Materials</h2>
-        <ul>
-          {project.materials.map((material) => <li key={material}>{material}</li>)}
-        </ul>
-      </section>
+      <MaterialsChecklist projectId={project.id} materials={project.materials} />
       {available && project.tutorialSource && <p className="muted small">Tutorial by {project.tutorialSource}</p>}
 
       <ActionBar>
