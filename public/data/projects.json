@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "notes": "Tutorial destinations checked November 11, 2026. Links returning 404 are marked unavailable so the details page can explain the problem. Estimated times come from the tutorial when it gives one, otherwise they are our estimate. Images are original illustrations in public/images/projects. Tool requirements are linked by ID in projectTools; the shared catalogue is in src/data/tools.js.",
+  "notes": "Tutorial destinations checked November 11, 2026. Links returning 404 are marked unavailable so the details page can explain the problem. On November 23, 2026 the two links that had returned 404 were replaced with working tutorials (Cut Out + Keep and Fashion Wanderer), checked in a browser. Estimated times come from the tutorial when it gives one, otherwise they are our estimate. Images are original illustrations in public/images/projects. Tool requirements are linked by ID in projectTools; the shared catalogue is in src/data/tools.js.",
   "projects": [
     {
       "id": "no-sew-tee-tote",
@@ -167,16 +167,16 @@
       "materials": ["Old jeans", "Sewing thread"],
       "title": "Jeans-to-Denim Skirt",
       "description": "Unpick the inseams and turn straight-leg jeans into a skirt.",
-      "transformation": "Open the inside leg seams, overlap the front and back crotch pieces so they lie flat, stitch them in place, and cut a frayed hem at your chosen length.",
+      "transformation": "Unpick the inside leg seams and part of the crotch seam, then lay the front and back flaps over each other. Fill the gaps underneath with panels cut from the old legs, stitch them in place, and hem the skirt or leave the edge to fray.",
       "image": "images/projects/pants-skirt.svg",
       "clothingType": "Pants",
       "projectType": "Machine-Sewn Project",
       "category": "Shorts/Skirts",
       "difficulty": "Advanced",
-      "estimatedTime": "3 hr",
-      "tutorialUrl": "https://www.gathered.how/sewing-quilting/sewing/how-to-turn-a-pair-of-jeans-into-a-denim-skirt/",
-      "tutorialSource": "Gathered",
-      "tutorialAvailable": false
+      "estimatedTime": "4 hr",
+      "tutorialUrl": "https://www.cutoutandkeep.net/projects/denim-jeans-to-skirt",
+      "tutorialSource": "Cut Out + Keep",
+      "tutorialAvailable": true
     },
     {
       "id": "shorter-skirt-new-hem",
@@ -212,19 +212,19 @@
     },
     {
       "id": "tiered-skirt-off-shoulder-top",
-      "materials": ["Tiered skirt", "Elastic", "Sewing thread"],
-      "title": "Tiered Skirt to Off-Shoulder Top",
-      "description": "Refashion a tiered skirt into an off-the-shoulder ruffle top.",
-      "transformation": "The bottom tier becomes the ruffle and the upper tiers become the bodice. Trace a tank top for the shape, then sew an elastic casing along the neckline so it sits off the shoulders.",
+      "materials": ["Skirt with an elastic waistband", "Narrow elastic", "Sewing thread"],
+      "title": "Skirt to Off-Shoulder Top",
+      "description": "Refashion an elastic-waist skirt into an off-the-shoulder top with balloon sleeves.",
+      "transformation": "The skirt's elastic waistband becomes the off-shoulder neckline. Cut the top to length, cut the sleeves from the upper skirt, stitch the underarm and side seams, hem the bottom, and gather each sleeve with a ring of elastic.",
       "image": "images/projects/skirt-off-shoulder.svg",
       "clothingType": "Skirt",
       "projectType": "Machine-Sewn Project",
       "category": "Tops",
       "difficulty": "Advanced",
-      "estimatedTime": "1 hr",
-      "tutorialUrl": "https://www.instructables.com/How-to-Upcycle-a-Skirt-Into-an-Cold-Shoulder-Shirt/",
-      "tutorialSource": "Instructables",
-      "tutorialAvailable": false
+      "estimatedTime": "2 hr",
+      "tutorialUrl": "https://fashionwanderer.com/skirt-into-off-the-shoulder-top/",
+      "tutorialSource": "Fashion Wanderer",
+      "tutorialAvailable": true
     }
   ],
   "projectTools": [

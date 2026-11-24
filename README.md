@@ -9,6 +9,8 @@ Kenneth P - Developer
 
 Maria Z - Developer 
 
+**Live site:** <https://mariazia-jpg.github.io/INFO-442/>
+
 [Mission Statement](https://app.notion.com/p/Team-mission-statement-3f3713d1a2c380acb462c79259ba3d06?source=copy_link)
 
 [Performance Matrix](https://app.notion.com/p/Team-Performance-Matrix-3f5713d1a2c380fa8980f7f61d087636?source=copy_link)
@@ -125,8 +127,10 @@ names still load; saving preferences converts them into the separate rows.
 **Tutorial availability.** Set `tutorialAvailable` to `false` if a link stops
 working; the details page shows a banner and disables Open Tutorial. On November
 11, 2026, the Jeans-to-Denim Skirt and Tiered Skirt to Off-Shoulder Top links
-returned 404 and were marked unavailable. All other listed destinations returned
-200 with matching tutorial titles. URL syntax checks in `npm test` do not replace
+returned 404 and were marked unavailable. On November 23 they were replaced with
+working tutorials from Cut Out + Keep and Fashion Wanderer. The skirt project was
+renamed Skirt to Off-Shoulder Top to match its new tutorial. Every project now
+links to a working tutorial. URL syntax checks in `npm test` do not replace
 checking the external sites manually.
 
 **Filtering rules (`src/lib/recommend.js`).** R4 uses the confirmed clothing type
@@ -163,7 +167,7 @@ clothing type from the test photo's file name, so results don't depend on the mo
 
 Still to check by hand on the deployed site, with the tools the requirements name:
 
-- **Recognition with real photos:** MobileNet accuracy on a few photos of each clothing type.
+- **Recognition with real photos:** Gemini accuracy on a few photos of each clothing type.
 - **HEIC conversion in Chrome:** upload a real iPhone `.heic` photo.
 - **Performance:** NF-P1 (PageSpeed Insights), NF-P2 (WebPageTest), NF-P3 (recognition under 10 s), NF-P4, NF-P5 (Lighthouse).
 - **Accessibility:** NF-A1 (WebAIM contrast), NF-A3 (VoiceOver and NVDA), NF-A5 (alerts announced), NF-A8 (W3C validator), NF-A9 (Lighthouse).
@@ -171,24 +175,79 @@ Still to check by hand on the deployed site, with the tools the requirements nam
 
 ## Quality
 
-- **Accessibility:** Project images have descriptive alternative text. Each View Project
-  link includes the project title in its accessible name. Forms use labels and native
-  radio/checkbox controls; keyboard users have visible focus outlines and a Skip to
-  content link. Error alerts use `role="alert"`, and informational messages use
-  `role="status"`. Tutorial links announce that they open a new tab.
-- **Security:** External tutorial links use `target="_blank"` with
-  `rel="noopener noreferrer"`. React renders project text without injecting HTML.
-  The local MVP account service stores salted password hashes rather than plaintext
-  passwords. These browser-local accounts are a prototype, not server-enforced
-  authentication or a substitute for a production authentication service.
-- **Responsivity:** Layouts start with a single mobile column, fluid images, and
-  wrapping difficulty/time tags. At the 768px breakpoint, gutters, headings,
-  and tutorial image margins adapt for larger screens.
-  Recommendation cards and tutorial details were checked at 360, 768, and 1440px
-  without horizontal overflow. These viewport checks do not replace real-device tests.
-- **Recovery:** Empty recommendations offer Change Preferences, failed project-data
-  requests can be retried, and missing projects offer navigation back. Known unavailable
-  tutorials show an explanatory message and a disabled tutorial button.
+### Accessibility
+
+- **Semantic HTML.** The page declares `lang="en"`. Each page has one `<h1>`, landmark
+  elements (`<header>`, `<nav>`, `<main>`), and ordered lists for the "How it works"
+  steps and the progress tracker. Every page sets its own browser tab title
+  (`usePageTitle` in `src/components/ui.jsx`).
+- **Text alternatives.** Project and style images have descriptive `alt` text.
+  Decorative icons use `aria-hidden="true"`, and loading spinners have an accessible
+  label. Each View Project link includes the project title in its accessible name,
+  so a screen reader says "View Project: No-Sew T-Shirt Tote", not just "View Project".
+- **Forms.** Every input has a `<label>`. The style questions use native radio buttons
+  and checkboxes inside a `<fieldset>` named by the question. Sign Up and Log In mark
+  invalid fields with `aria-invalid` and connect them to the error with
+  `aria-describedby`. They also set `autocomplete` so password managers work.
+- **Announcements.** Errors use `role="alert"` and notices use `role="status"`
+  (`Alert` in `ui.jsx`), so screen readers announce them when they appear. The menu
+  button reports `aria-expanded`, the progress tracker marks the current step with
+  `aria-current="step"`, and the Open Tutorial link says that it opens a new tab.
+- **Keyboard.** The upload-to-recommendations flow works with the keyboard alone
+  (tested in `quality.test.js`). There is a Skip to content link, a visible `:focus-visible`
+  outline on every control, and Escape closes the menu. After each page change,
+  focus moves to the new page's heading so keyboard and screen reader users know
+  where they are (`Layout.jsx`).
+- **Contrast, size and motion.** Text colors are chosen for at least 4.5:1 contrast,
+  and the ratios for the gray, error and disabled text are noted in `styles.css`. Main buttons are 48 px
+  tall, and a test checks that every control is at least 24 × 24 px. The spinner
+  slows down when the device asks for reduced motion (`prefers-reduced-motion`).
+
+### Security and privacy
+
+- **HTTPS.** The site is served only over HTTPS by GitHub Pages.
+- **No secrets in the code.** Recognition calls Gemini through Firebase AI Logic, so
+  there is no API key in the site's code. Firebase App Check with reCAPTCHA v3
+  (`src/services/gemini.js`) stops other sites from using the project's quota.
+- **Passwords.** The MVP account service stores a salted SHA-256 hash of each
+  password, never the password itself. Sign Up requires a valid email and a password
+  of at least 8 characters. These accounts live in the browser's localStorage, so
+  they are a prototype, not a replacement for server-side authentication.
+- **Upload validation.** Only JPG, PNG and HEIC files up to 10 MB are accepted. The
+  file extension and the MIME type have to agree (`validatePhoto` in
+  `src/lib/validation.js`).
+- **Photo privacy.** Each photo is redrawn on a canvas and saved again as a JPEG of
+  at most 1024 px. This removes EXIF metadata such as GPS location before the photo
+  goes anywhere (tested in `image-processing.test.js`). The photo is kept in
+  sessionStorage only, so it is gone when the tab closes.
+- **XSS and links.** React escapes all text it shows, and the app never uses
+  `dangerouslySetInnerHTML`. External tutorial links use `target="_blank"` with
+  `rel="noopener noreferrer"`, so the tutorial site can't control the ReWear tab.
+- **Access control.** Route guards (`src/components/guards.jsx`) send logged-out
+  users to Log In. They also stop anyone from reaching Recognition, Preferences or
+  Ideas without first uploading a photo and confirming its type.
+
+### Responsivity
+
+- **Mobile first.** The viewport meta tag is set, and the base styles are a single
+  column for phones. One `min-width: 768px` media query widens the margins, enlarges
+  the headings, and puts the style-question cards in three columns.
+- **Fluid content.** Images use `max-width: 100%`. Tags and tool lists wrap. Content
+  is capped at a readable width on large screens.
+- **Thumb-friendly actions.** Each page's main button sits in an action bar pinned to
+  the bottom of the screen. It leaves room for the iPhone home indicator with
+  `env(safe-area-inset-bottom)`.
+- **Tested widths.** A browser test checks that no page scrolls sideways at 360, 768
+  and 1440 px. These checks don't replace testing on real phones.
+
+### Error recovery
+
+- If no projects match, the page says so and offers Change Preferences.
+- If project data fails to load, Try again requests it again. A missing project
+  offers a way back to Ideas.
+- If recognition fails, times out or isn't sure, the user picks the clothing type.
+- A tutorial whose link is known to be broken shows a message and a disabled
+  Open Tutorial button.
 
 See [recommendation and tutorial verification](docs/sprint2-recommendation-review.md)
 for the scope, results, and remaining verification steps.

@@ -11,7 +11,7 @@ const ACCEPT = 'image/jpeg,image/png,image/heic,image/heif,.jpg,.jpeg,.png,.heic
 
 const FILE_ERRORS = {
   missing: 'Choose a photo of your clothing item first.',
-  unsupported: `That file type isn’t supported. Choose a ${SUPPORTED_FILE_LABEL} photo.`,
+  unsupported: 'That file type isn’t supported. Choose a JPG, PNG or HEIC photo.',
   'too-large': `That photo is larger than ${MAX_UPLOAD_BYTES / (1024 * 1024)} MB. Choose a smaller photo.`,
 };
 
